@@ -33,4 +33,4 @@ stages:
     - train.num_classes
     - train.weight_decay
     outs:
-    - model/model.pkl
+    - model.pkl
