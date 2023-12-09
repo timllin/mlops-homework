@@ -35,12 +35,12 @@ stages:
       size: 2812
     params:
       params.yaml:
-        featurize.max_seq_len: 16
+        featurize.max_seq_len: 32
         featurize.tokenizer: distilbert-base-uncased
     outs:
     - path: data/features
       hash: md5
-      md5: 8f0fe177cb05a8a5bf39cc4511beafdc.dir
+      md5: 7d2f29aa6ff5a74ecdc39e0e5aa88fd3.dir
       size: 4378469
       nfiles: 2
   train:
