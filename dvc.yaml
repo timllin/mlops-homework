@@ -1,0 +1,36 @@
+stages:
+  prepare:
+    cmd: python src/prepare.py data/raw/train/train.csv
+    deps:
+    - data/raw/train/train.csv
+    - src/prepare.py
+    params:
+    - prepare.seed
+    - prepare.split
+    outs:
+    - data/prepared
+  featurize:
+    cmd: python src/featurization.py data/prepared data/features
+    deps:
+    - data/prepared
+    - src/featurization.py
+    params:
+    - featurize.max_seq_len
+    - featurize.tokenizer
+    outs:
+    - data/features
+  train:
+    cmd: python src/train.py data/features model.pkl
+    deps:
+    - data/features
+    - src/train.py
+    params:
+    - train.batch_size
+    - train.dropout_rate
+    - train.lr
+    - train.model_name
+    - train.n_epochs
+    - train.num_classes
+    - train.weight_decay
+    outs:
+    - model/model.pkl
