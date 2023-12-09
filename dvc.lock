@@ -1,0 +1,71 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python3 src/prepare.py data/raw/train/train.csv
+    deps:
+    - path: data/raw/train/train.csv
+      hash: md5
+      md5: e5ce53a9cfc9d8489a4111ece7688081
+      size: 3174471
+    - path: src/prepare.py
+      hash: md5
+      md5: aef319d960353be1759608a2eecba57b
+      size: 1438
+    params:
+      params.yaml:
+        prepare.seed: 20170428
+        prepare.split: 0.8
+    outs:
+    - path: data/prepared
+      hash: md5
+      md5: 127ea305158cc43b806bbca55b65c5f6.dir
+      size: 3174510
+      nfiles: 2
+  featurize:
+    cmd: python3 src/featurization.py data/prepared data/features
+    deps:
+    - path: data/prepared
+      hash: md5
+      md5: 127ea305158cc43b806bbca55b65c5f6.dir
+      size: 3174510
+      nfiles: 2
+    - path: src/featurization.py
+      hash: md5
+      md5: f3bd7bef7caed4af3459553cac0b3d9a
+      size: 2812
+    params:
+      params.yaml:
+        featurize.max_seq_len: 16
+        featurize.tokenizer: distilbert-base-uncased
+    outs:
+    - path: data/features
+      hash: md5
+      md5: 8f0fe177cb05a8a5bf39cc4511beafdc.dir
+      size: 4378469
+      nfiles: 2
+  train:
+    cmd: python3 src/train.py data/features model.pkl
+    deps:
+    - path: data/features
+      hash: md5
+      md5: 8f0fe177cb05a8a5bf39cc4511beafdc.dir
+      size: 4378469
+      nfiles: 2
+    - path: src/train.py
+      hash: md5
+      md5: 60f0771de92ffd810e7fefa43fcc7f4f
+      size: 2038
+    params:
+      params.yaml:
+        train.batch_size: 256
+        train.dropout_rate: 0.1
+        train.lr: 0.0003
+        train.model_name: distilbert-base-uncased
+        train.n_epochs: 1
+        train.num_classes: 6
+        train.weight_decay: 1e-05
+    outs:
+    - path: model.pkl
+      hash: md5
+      md5: b4b102e23baff2ed11f69c16800f9723
+      size: 267870513
