@@ -1,6 +1,6 @@
 stages:
   prepare:
-    cmd: python src/prepare.py data/raw/train/train.csv
+    cmd: python3 src/prepare.py data/raw/train/train.csv
     deps:
     - data/raw/train/train.csv
     - src/prepare.py
@@ -10,7 +10,7 @@ stages:
     outs:
     - data/prepared
   featurize:
-    cmd: python src/featurization.py data/prepared data/features
+    cmd: python3 src/featurization.py data/prepared data/features
     deps:
     - data/prepared
     - src/featurization.py
@@ -20,7 +20,7 @@ stages:
     outs:
     - data/features
   train:
-    cmd: python src/train.py data/features model.pkl
+    cmd: python3 src/train.py data/features model.pkl
     deps:
     - data/features
     - src/train.py
@@ -33,4 +33,17 @@ stages:
     - train.num_classes
     - train.weight_decay
     outs:
-    - model.pkl
+    - model
+  evaluate:
+    cmd: python3 src/evaluate.py model.pkl data/features
+    deps:
+    - data/features
+    - model/model.pkl
+    - src/evaluate.py
+    params:
+    - evaluate.batch_size
+    - evaluate.dropout_rate
+    - evaluate.model_name
+    - evaluate.num_classes
+    outs:
+    - eval

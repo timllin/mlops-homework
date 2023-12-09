@@ -53,8 +53,8 @@ stages:
       nfiles: 2
     - path: src/train.py
       hash: md5
-      md5: 60f0771de92ffd810e7fefa43fcc7f4f
-      size: 2038
+      md5: 1acb05f58c5cccf514a56b7e1b1ed152
+      size: 2061
     params:
       params.yaml:
         train.batch_size: 256
@@ -65,7 +65,36 @@ stages:
         train.num_classes: 6
         train.weight_decay: 1e-05
     outs:
-    - path: model.pkl
+    - path: model
       hash: md5
-      md5: b4b102e23baff2ed11f69c16800f9723
+      md5: 4432e2fa0a011f7bfc8d34eabdceacf7.dir
       size: 267870513
+      nfiles: 1
+  evaluate:
+    cmd: python3 src/evaluate.py model.pkl data/features
+    deps:
+    - path: data/features
+      hash: md5
+      md5: 8f0fe177cb05a8a5bf39cc4511beafdc.dir
+      size: 4378469
+      nfiles: 2
+    - path: model/model.pkl
+      hash: md5
+      md5: d17edc4e404f99c28df8beadd8acc729
+      size: 267870513
+    - path: src/evaluate.py
+      hash: md5
+      md5: 63e1a0f302cae5dcf268e9fb1ebada3a
+      size: 2418
+    params:
+      params.yaml:
+        evaluate.batch_size: 256
+        evaluate.dropout_rate: 0.1
+        evaluate.model_name: distilbert-base-uncased
+        evaluate.num_classes: 6
+    outs:
+    - path: eval
+      hash: md5
+      md5: a77015e51e4700f028cbdf6aebd55b5e.dir
+      size: 287
+      nfiles: 1
